@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>主页</title>
+	<link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script>
+		window.onload=function(){
+			new Vue({
+				el:'#box',
+				data:{
+					myData:[],
+					Wip:'',
+					Nip:'',
+					nowIndex:-100
+
+				},
+				methods:{
+					add:function(){
+						this.myData.push({
+							Wip:this.Wip,
+							Nip:this.Nip
+						});
+						this.Wip='';
+						this.Nip='';
+					},
+					deleteMsg:function(n){
+						if(n==-88){
+							this.myData=[];
+
+						}else{
+							this.myData.splice(n,1);
+						}
+
+					}
+				}
+			});
+		};
+	</script>
+</head>
+<body>
+<div class="container" id="box">
+	<form role="form">
+		<div class="form-group">
+			<label for="Wip">外网IP:</label>
+			<input type="text" id="Wip" class="form-control" placeholder="请输入外网IP" style="width:180px;" v-model="Wip">
+		</div>
+		<div class="form-group">
+			<label for="Nip">内网IP:</label>
+			<input type="text" id="Nip" class="form-control" placeholder="请输入内网IP" style="width:180px;" v-model="Nip">
+		</div>
+		<div class="form-group">
+			<input type="button" value="添加" class="btn btn-primary" v-on:click="add()">
+			<input type="reset" value="重置" class="btn btn-danger">
+		</div>					
+	</form>
+	<hr>
+	<table class="table table-bordered table-hover">
+		<caption class="h2 text-info text-center">资产信息表</caption>
+		<tr class="text-danger">
+			<th class="text-center">序号</th>
+			<th class="text-center">外网IP</th>
+			<th class="text-center">内网IP</th>
+			<th class="text-center">操作</th>
+		</tr>
+		<tr class="text-center" v-for="(item,index) in myData">
+			<td>{{ index+1 }}</td>
+			<td>{{ item.Wip }}</td>
+			<td>{{ item.Nip }}</td>
+			<td><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" v-on:click="nowIndex=index">删除</button></td>
+		</tr>
+		<tr v-show="myData.length!=0">
+			<td colspan="4" class="text-right">
+				<button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" v-on:click="nowIndex=-88">删除全部</button>
+			</td>
+		</tr>
+		<tr v-show="myData.length==0">
+			<td colspan="4" class="text-center text-muted">
+				<p>暂无数据...</p>
+			</td>
+		</tr>		
+	</table>
+
+	<!-- 模态框-->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">确认要删除么？</h4>
+				</div>
+				<div class="modal-body">
+					<table class="table table-bordered">
+						<tr class="text-info">
+							<th class="text-center">序号</th>
+							<th class="text-center">外网IP</th>
+							<th class="text-center">内网IP</th>
+						</tr>
+						<tr class="text-center" v-show="nowIndex!=-88">
+							<td>{{ nowIndex+1 }}</td>
+							<td v-for="x in myData[nowIndex]">{{ x }}</td>
+						</tr>
+						<tr class="text-center" v-show="nowIndex==-88" v-for="(z,y) in myData">
+							<td>{{ y+1 }}</td>
+							<td>{{ z.Wip }}</td>
+							<td>{{ z.Nip }}</td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-success btn-sm" data-dismiss="modal" v-on:click="deleteMsg(nowIndex)">确认</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>
