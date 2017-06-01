@@ -1,12 +1,14 @@
 # js相关
 
 ### 带前缀框的表单
+```form
 <div class="form-group">
     <div class="input-group">
         <span class="input-group-addon">密码</span>
           <input name="Password" type="Password" class="form-control" placeholder="Password">
     </div> 
 </div>
+```
 
 ### checkbox全选
 ```html
